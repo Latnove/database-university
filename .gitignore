@@ -1,1 +1,4 @@
 .env
+users.sql
+seed.sql
+structure.sql
