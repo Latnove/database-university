@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  pg_publisher:
+    image: postgres:15
+    container_name: pg_publisher
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shopdb
+    ports:
+      - '5435:5432'
+
+  pg_subscriber:
+    image: postgres:15
+    container_name: pg_subscriber
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shopdb
+    ports:
+      - '5436:5432'
