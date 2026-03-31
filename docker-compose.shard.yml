@@ -1,0 +1,44 @@
+services:
+  shard1:
+    image: postgres:16
+    container_name: s2_shard1
+    environment:
+      POSTGRES_DB: shard1_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '35432:5432'
+    volumes:
+      - s2_shard1_data:/var/lib/postgresql/data
+
+  shard2:
+    image: postgres:16
+    container_name: s2_shard2
+    environment:
+      POSTGRES_DB: shard2_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '35433:5432'
+    volumes:
+      - s2_shard2_data:/var/lib/postgresql/data
+
+  router:
+    image: postgres:16
+    container_name: s2_router
+    environment:
+      POSTGRES_DB: router_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '35434:5432'
+    volumes:
+      - s2_router_data:/var/lib/postgresql/data
+    depends_on:
+      - shard1
+      - shard2
+
+volumes:
+  s2_shard1_data:
+  s2_shard2_data:
+  s2_router_data:

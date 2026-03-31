@@ -22,14 +22,14 @@
 	insert into products(name) values ('phone'), ('laptop');"
 ```
 
-![alt text](image.png)
+![alt text](images/6/image.png)
 
 ```
 	docker exec -it pg_replica1 psql -U postgres -d shopdb -c "
 	select * from products;"
 ```
 
-![alt text](image-1.png)
+![alt text](images/6/image-1.png)
 
 ## Проверка ошибки вставки
 
@@ -38,7 +38,7 @@
   insert into products(name) values ('fail');"
 ```
 
-![alt text](image-2.png)
+![alt text](images/6/image-2.png)
 
 ## Проверка LAG
 
@@ -53,7 +53,7 @@
   select write_lag, replay_lag from pg_stat_replication;"
 ```
 
-![alt text](image-3.png)
+![alt text](images/6/image-3.png)
 
 # Логическая реплика
 
@@ -62,7 +62,7 @@
 	docker ps
 ```
 
-![alt text](image-4.png)
+![alt text](images/6/image-4.png)
 
 ## Подготовка publisher
 
@@ -74,7 +74,7 @@
 	docker restart pg_publisher
 ```
 
-![alt text](image-5.png)
+![alt text](images/6/image-5.png)
 
 ## Создание пользователя для репликации
 
@@ -101,7 +101,7 @@
 	docker exec -it pg_subscriber psql -U postgres -d shopdb -c "create subscription sub_lr connection 'host=pg_publisher port=5432 dbname=shopdb user=replicator password=replicator_pass' publication pub_lr;"
 ```
 
-![alt text](image-6.png)
+![alt text](images/6/image-6.png)
 
 ## Проверка работоспособности
 
@@ -113,7 +113,7 @@
   select * from lr_test;"
 ```
 
-![alt text](image-7.png)
+![alt text](images/6/image-7.png)
 
 ## ddl не реплицируется
 
@@ -122,7 +122,7 @@
 	docker exec -it pg_subscriber psql -U postgres -d shopdb -c "select column_name from information_schema.columns where table_name='lr_test' order by ordinal_position;"
 ```
 
-![alt text](image-8.png)
+![alt text](images/6/image-8.png)
 
 ## Проверка REPLICA IDENTITY
 
@@ -136,7 +136,7 @@
 	docker exec -it pg_publisher psql -U postgres -d shopdb -c "insert into lr_no_pk values (1, 'a');"
 ```
 
-![alt text](image-9.png)
+![alt text](images/6/image-9.png)
 
 ## Проверка статуса репликации
 
@@ -148,7 +148,7 @@
 	docker exec -it pg_subscriber psql -U postgres -d shopdb -c "select srrelid::regclass as table_name, srsubstate from pg_subscription_rel;"
 ```
 
-![alt text](image-10.png)
+![alt text](images/6/image-10.png)
 
 ## Зачем тут нужны pg_dump/pg_restore
 
@@ -156,5 +156,5 @@
 нужны для первичного переноса схемы на subscriber перед созданием subscription,
 синхронизации схемы после изменений DDL на publisher.
 
-![alt text](image-11.png)
-![alt text](image-12.png)
+![alt text](images/6/image-11.png)
+![alt text](images/6/image-12.png)
